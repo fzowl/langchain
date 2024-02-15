@@ -115,13 +115,21 @@ class VoyageEmbeddings(BaseModel, Embeddings):
     def _get_embeddings(
         self,
         texts: List[str],
+        model: str,
         batch_size: Optional[int] = None,
         input_type: Optional[str] = None,
     ) -> List[List[float]]:
         embeddings: List[List[float]] = []
 
+        self.model = model
+
         if batch_size is None:
             batch_size = self.batch_size
+        else:
+            if self.model in ["voyage-2", "voyage-02"]:
+                batch_size = 72
+            else:
+                batch_size = 7
 
         if self.show_progress_bar:
             try:
